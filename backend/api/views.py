@@ -52,6 +52,16 @@ class LoginView(views.APIView):
         )
 
 
+class PhoneCheckView(views.APIView):
+    def post(self, request, *args, **kwargs):
+        phone_number = request.data.get("phone_number")
+        user = User.objects.filter(phone_number=phone_number)
+        return Response(
+            {
+                "exists": user.exists(),
+            }
+        )
+
 class RegisterView(views.APIView):
     def post(self, request, *args, **kwargs):
         phone_number = request.data.get("phone_number")
@@ -59,13 +69,21 @@ class RegisterView(views.APIView):
         name = request.data.get("name")
         business_sector = request.data.get("business_sector")
         
-        # create the user
-        user = User.objects.create_user(
-            phone_number=phone_number,
-            role=role,
-            name=name,
-            business_sector=business_sector,
-        )
+        # create the user, if role is admin then no business sector
+        if role == "admin":
+            user, created = User.objects.get_or_create(
+                phone_number=phone_number,
+                role=role,
+            )
+        else:
+            user, created = User.objects.get_or_create(
+                phone_number=phone_number,
+                role=role,
+            )
+
+        user.first_name = name
+        user.business_sector = business_sector
+        user.save()
         
         refresh = RefreshToken.for_user(user)
         return Response(

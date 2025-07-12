@@ -61,6 +61,250 @@ body {
     cursor: pointer;
 }
 
+/* Landing Page */
+.landing-container {
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #f0f7ff 0%, #ffffff 100%);
+}
+
+.landing-header {
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    padding: 15px 0;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-right: 10px;
+}
+
+.main-nav a {
+    color: #333;
+    text-decoration: none;
+    margin-left: 30px;
+    font-size: 0.95em;
+    transition: color 0.3s;
+}
+
+.main-nav a:hover {
+    color: #007bff;
+}
+
+.hero-section {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 40px;
+}
+
+.hero-content {
+    flex: 1;
+    min-width: 300px;
+}
+
+.hero-content h1 {
+    font-size: 2.8em;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.hero-content h1 span {
+    color: #007bff;
+    display: block;
+}
+
+.hero-content p {
+    color: #666;
+    font-size: 1.1em;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.button-group {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: 2px solid #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.btn-outline {
+    background-color: transparent;
+    color: #007bff;
+    border: 2px solid #007bff;
+}
+
+.btn-outline:hover {
+    background-color: #f0f7ff;
+}
+
+.auth-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    padding: 30px;
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.auth-card h2 {
+    color: #2c3e50;
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.auth-card p {
+    color: #666;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 0.95em;
+}
+
+.features-section {
+    background: white;
+    padding: 60px 20px;
+}
+
+.features-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.section-header h2 {
+    color: #2c3e50;
+    font-size: 2.2em;
+    margin-bottom: 15px;
+}
+
+.section-header p {
+    color: #666;
+    max-width: 700px;
+    margin: 0 auto;
+    font-size: 1.1em;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.feature-card {
+    background: #f9f9f9;
+    border-radius: 8px;
+    padding: 30px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.feature-icon {
+    width: 50px;
+    height: 50px;
+    background: #e6f0ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    color: #007bff;
+}
+
+.feature-card h3 {
+    color: #2c3e50;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.feature-card p {
+    color: #666;
+    line-height: 1.6;
+    margin: 0;
+}
+
+footer {
+    background: #f8f9fa;
+    padding: 30px 20px;
+    text-align: center;
+    color: #666;
+    font-size: 0.9em;
+    border-top: 1px solid #eee;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-section {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .button-group {
+        justify-content: center;
+    }
+    
+    .main-nav {
+        display: none; /* Hide nav on mobile for simplicity */
+    }
+}
+
 /* Dashboard & Components */
 .dashboard-header {
     display: flex;
