@@ -173,16 +173,7 @@ function AdminDashboard({ user, onLogout }) {
     <Typography variant="h5" component="h2" sx={{ fontWeight: 600, color: 'primary.main' }}>
         Trainee Overview
     </Typography>
-                        {/* <Button 
-                            component={Link}
-                            to="/community"
-                            variant="outlined"
-                            size="small"
-                            startIcon={<ChatIcon />}
-                            sx={{ textTransform: 'none' }}
-                        >
-                            View Community Feed
-                        </Button> */}
+                
                         <TextField
   label="Filter by Sector"
   variant="outlined"
@@ -206,44 +197,6 @@ function AdminDashboard({ user, onLogout }) {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {/* {trainees.length > 0 ? (
-                                    trainees.map(trainee => (
-                                        <TableRow key={trainee.id} hover>
-                                            <TableCell>{trainee.first_name} {trainee.last_name}</TableCell>
-                                            <TableCell sx={{ color: 'text.secondary' }}>{trainee.phone_number || 'N/A'}</TableCell>
-                                            <TableCell>{trainee.business_sector || 'N/A'}</TableCell>
-                                            <TableCell>
-                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                                                    <Box sx={{ width: '100%', maxWidth: 150 }}>
-                                                        <LinearProgress 
-                                                            variant="determinate" 
-                                                            value={trainee.progress || 0} 
-                                                            sx={{ 
-                                                                height: 8, 
-                                                                borderRadius: 2,
-                                                                backgroundColor: 'rgba(25, 118, 210, 0.1)',
-                                                                '& .MuiLinearProgress-bar': {
-                                                                    borderRadius: 2,
-                                                                    background: 'linear-gradient(90deg, #1976d2 0%, #21CBF3 100%)',
-                                                                }
-                                                            }} 
-                                                        />
-                                                    </Box>
-                                                    <Typography variant="body2" color="text.secondary" sx={{ minWidth: 40 }}>
-                                                        {trainee.progress || 0}%
-                                                    </Typography>
-                                                </Box>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))
-                                ) : (
-                                    <TableRow>
-                                        <TableCell colSpan={4} align="center" sx={{ py: 3 }}>
-                                            <SchoolIcon sx={{ fontSize: 40, color: 'action.disabled', mb: 1 }} />
-                                            <Typography color="text.secondary">No trainees found</Typography>
-                                        </TableCell>
-                                    </TableRow>
-                                )} */}
                                 {trainees
   .filter(t => !sectorFilter || t.business_sector?.toLowerCase().includes(sectorFilter.toLowerCase()))
   .map(trainee => (
@@ -339,100 +292,6 @@ function AdminDashboard({ user, onLogout }) {
                     </TableContainer>
                 </CardContent>
             </Card>
-
-            {/* Group Chats */}
-            {/* <Card sx={{ borderRadius: 3, boxShadow: 3 }}>
-                <CardContent sx={{ p: { xs: 2, sm: 3 } }}> */}
-                    {/* <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                        <Typography variant="h5" component="h2" sx={{ fontWeight: 600, color: 'primary.main' }}>
-                            Manage Group Chats
-                        </Typography>
-                        <Button 
-                            variant="contained" 
-                            color="primary" 
-                            startIcon={<AddIcon />}
-                            onClick={handleCreateChat}
-                            sx={{ textTransform: 'none' }}
-                        >
-                            New Chat Group
-                        </Button>
-                    </Box>
-                    
-                    {chats.length > 0 ? (
-                        <List sx={{ '& .MuiListItem-root': { px: 0 } }}>
-                            {chats.map(chat => (
-                                <Card 
-                                    key={chat.id} 
-                                    variant="outlined" 
-                                    sx={{ 
-                                        mb: 2, 
-                                        borderRadius: 2,
-                                        borderColor: 'rgba(0, 0, 0, 0.08)',
-                                        transition: 'all 0.2s ease-in-out',
-                                        '&:hover': {
-                                            borderColor: 'primary.light',
-                                            boxShadow: '0 4px 20px rgba(25, 118, 210, 0.08)'
-                                        }
-                                    }}
-                                    component={Link}
-                                    to={`/chat/${chat.id}`}
-                                >
-                                    <ListItem sx={{ py: 2, px: { xs: 2, sm: 3 } }}>
-                                        <ListItemAvatar>
-                                            <Avatar sx={{ bgcolor: 'primary.light', color: 'primary.contrastText' }}>
-                                                <GroupIcon />
-                                            </Avatar>
-                                        </ListItemAvatar>
-                                        <ListItemText 
-                                            primary={
-                                                <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
-                                                    {chat.name}
-                                                </Typography>
-                                            }
-                                            secondary={
-                                                <Typography variant="body2" color="text.secondary">
-                                                    {chat.member_count || 0} members • Last active: {new Date().toLocaleDateString()}
-                                                </Typography>
-                                            }
-                                        />
-                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                            <Typography variant="body2" color="primary" sx={{ fontWeight: 500, mr: 1 }}>
-                                                View Chat
-                                            </Typography>
-                                            <Box sx={{ color: 'primary.main' }}>→</Box>
-                                        </Box>
-                                    </ListItem>
-                                </Card>
-                            ))}
-                        </List>
-                    ) : (
-                        <Box sx={{ 
-                            textAlign: 'center', 
-                            py: 6, 
-                            px: 2,
-                            bgcolor: 'rgba(0, 0, 0, 0.01)',
-                            borderRadius: 2
-                        }}>
-                            <GroupIcon sx={{ fontSize: 48, color: 'action.disabled', mb: 2 }} />
-                            <Typography variant="h6" color="text.secondary" gutterBottom>
-                                No group chats yet
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary" sx={{ mb: 3, maxWidth: 400, mx: 'auto' }}>
-                                Create your first group chat to start connecting trainees and graduates.
-                            </Typography>
-                            <Button 
-                                variant="contained" 
-                                color="primary" 
-                                startIcon={<AddIcon />}
-                                onClick={handleCreateChat}
-                                sx={{ textTransform: 'none' }}
-                            >
-                                Create Chat Group
-                            </Button>
-                        </Box> */}
-                   
-                {/* </CardContent>
-            </Card> */}
         </Container>
     );
 }
