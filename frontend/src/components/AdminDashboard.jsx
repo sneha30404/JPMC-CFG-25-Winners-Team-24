@@ -24,7 +24,8 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemAvatar
+  ListItemAvatar,
+  TextField
 } from '@mui/material';
 import {
   ExitToApp as LogoutIcon,
@@ -40,6 +41,8 @@ function AdminDashboard({ user, onLogout }) {
     const [graduates, setGraduates] = useState([]);
     const [chats, setChats] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [sectorFilter, setSectorFilter] = useState("");
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -166,11 +169,11 @@ function AdminDashboard({ user, onLogout }) {
             {/* Trainee Overview */}
             <Card sx={{ mb: 4, borderRadius: 3, boxShadow: 3 }}>
                 <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                        <Typography variant="h5" component="h2" sx={{ fontWeight: 600, color: 'primary.main' }}>
-                            Trainee Overview
-                        </Typography>
-                        <Button 
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+    <Typography variant="h5" component="h2" sx={{ fontWeight: 600, color: 'primary.main' }}>
+        Trainee Overview
+    </Typography>
+                        {/* <Button 
                             component={Link}
                             to="/community"
                             variant="outlined"
@@ -179,7 +182,17 @@ function AdminDashboard({ user, onLogout }) {
                             sx={{ textTransform: 'none' }}
                         >
                             View Community Feed
-                        </Button>
+                        </Button> */}
+                        <TextField
+  label="Filter by Sector"
+  variant="outlined"
+  size="small"
+  value={sectorFilter}
+  onChange={(e) => setSectorFilter(e.target.value)}
+  placeholder="e.g., Beauty"
+  sx={{ width: 250 }}
+/>
+
                     </Box>
                     
                     <TableContainer component={Paper} elevation={0} sx={{ borderRadius: 2, border: '1px solid rgba(0, 0, 0, 0.08)' }}>
@@ -193,7 +206,7 @@ function AdminDashboard({ user, onLogout }) {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {trainees.length > 0 ? (
+                                {/* {trainees.length > 0 ? (
                                     trainees.map(trainee => (
                                         <TableRow key={trainee.id} hover>
                                             <TableCell>{trainee.first_name} {trainee.last_name}</TableCell>
@@ -230,7 +243,40 @@ function AdminDashboard({ user, onLogout }) {
                                             <Typography color="text.secondary">No trainees found</Typography>
                                         </TableCell>
                                     </TableRow>
-                                )}
+                                )} */}
+                                {trainees
+  .filter(t => !sectorFilter || t.business_sector?.toLowerCase().includes(sectorFilter.toLowerCase()))
+  .map(trainee => (
+    <TableRow key={trainee.id} hover>
+      <TableCell>{trainee.first_name} {trainee.last_name}</TableCell>
+      <TableCell sx={{ color: 'text.secondary' }}>{trainee.phone_number || 'N/A'}</TableCell>
+      <TableCell>{trainee.business_sector || 'N/A'}</TableCell>
+      <TableCell>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Box sx={{ width: '100%', maxWidth: 150 }}>
+            <LinearProgress 
+              variant="determinate" 
+              value={trainee.progress || 0} 
+              sx={{ 
+                height: 8, 
+                borderRadius: 2,
+                backgroundColor: 'rgba(25, 118, 210, 0.1)',
+                '& .MuiLinearProgress-bar': {
+                  borderRadius: 2,
+                  background: 'linear-gradient(90deg, #1976d2 0%, #21CBF3 100%)',
+                }
+              }} 
+            />
+          </Box>
+          <Typography variant="body2" color="text.secondary" sx={{ minWidth: 40 }}>
+            {trainee.progress || 0}%
+          </Typography>
+        </Box>
+      </TableCell>
+    </TableRow>
+  ))
+}
+
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -295,9 +341,9 @@ function AdminDashboard({ user, onLogout }) {
             </Card>
 
             {/* Group Chats */}
-            <Card sx={{ borderRadius: 3, boxShadow: 3 }}>
-                <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+            {/* <Card sx={{ borderRadius: 3, boxShadow: 3 }}>
+                <CardContent sx={{ p: { xs: 2, sm: 3 } }}> */}
+                    {/* <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                         <Typography variant="h5" component="h2" sx={{ fontWeight: 600, color: 'primary.main' }}>
                             Manage Group Chats
                         </Typography>
@@ -383,10 +429,10 @@ function AdminDashboard({ user, onLogout }) {
                             >
                                 Create Chat Group
                             </Button>
-                        </Box>
-                    )}
-                </CardContent>
-            </Card>
+                        </Box> */}
+                   
+                {/* </CardContent>
+            </Card> */}
         </Container>
     );
 }
