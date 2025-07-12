@@ -11,5 +11,6 @@ urlpatterns = [
     path('community-posts/', CommunityPostListView.as_view(), name='community-posts'),
     path('chats/', GroupChatListView.as_view(), name='group-chats'),
     path('chats/<int:chat_id>/messages/', ChatMessageListView.as_view(), name='chat-messages'),
+    path('chats/create-all-users/', CreateAllUsersGroupChatView.as_view(), name='create-all-users-chat'),
     path('users/<int:user_id>/promote/', PromoteUserView.as_view(), name='promote-user'),
 ]

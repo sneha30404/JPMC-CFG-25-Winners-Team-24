@@ -37,8 +37,20 @@ function ChatList({ user, chats = [] }) {
   }, [searchTerm, chats]);
 
   return (
-    <Paper elevation={3} sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <Box sx={{ p: 2, borderBottom: '1px solid rgba(0, 0, 0, 0.12)' }}>
+    <Paper elevation={0} sx={{ 
+      height: '100%', 
+      display: 'flex', 
+      flexDirection: 'column', 
+      width: '100%',
+      minWidth: 0, // Prevents flex items from overflowing
+      overflow: 'hidden' 
+    }}>
+      <Box sx={{ 
+        p: 2, 
+        borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+        width: '100%',
+        boxSizing: 'border-box'
+      }}>
         <Typography variant="h6" component="div">Chats</Typography>
         <TextField
           fullWidth
@@ -57,7 +69,19 @@ function ChatList({ user, chats = [] }) {
           }}
         />
       </Box>
-      <List sx={{ flex: 1, overflowY: 'auto' }}>
+      <List sx={{ 
+        flex: 1, 
+        overflowY: 'auto', 
+        width: '100%',
+        p: 0,
+        minWidth: 0, // Prevents flex items from overflowing
+        '& .MuiListItem-root': {
+          px: 2,
+          width: '100%',
+          boxSizing: 'border-box',
+          maxWidth: '100%'
+        }
+      }}>
         {filteredChats.map((chat) => (
           <ListItem
             button
@@ -66,7 +90,11 @@ function ChatList({ user, chats = [] }) {
             to={`/chat/${chat.id}`}
             sx={{
               '&:hover': { backgroundColor: 'action.hover' },
-              borderLeft: (theme) => `3px solid ${chat.unread_count > 0 ? theme.palette.primary.main : 'transparent'}`
+              borderLeft: (theme) => `3px solid ${chat.unread_count > 0 ? theme.palette.primary.main : 'transparent'}`,
+              width: '100%',
+              maxWidth: '100%',
+              boxSizing: 'border-box',
+              pr: 1
             }}
           >
             <ListItemAvatar>

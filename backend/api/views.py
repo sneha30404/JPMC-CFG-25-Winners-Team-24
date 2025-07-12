@@ -85,6 +85,11 @@ class RegisterView(views.APIView):
         user.business_sector = business_sector
         user.save()
         
+        # Add user to 'All Users' group chat if it exists
+        all_users_chat = GroupChat.objects.filter(name='All Users').first()
+        if all_users_chat:
+            all_users_chat.members.add(user)
+        
         refresh = RefreshToken.for_user(user)
         return Response(
             {
@@ -196,3 +201,26 @@ class ChatMessageListView(generics.ListCreateAPIView):
         chat_id = self.kwargs["chat_id"]
         chat = GroupChat.objects.get(id=chat_id)
         serializer.save(author=self.request.user, chat=chat)
+
+
+class CreateAllUsersGroupChatView(views.APIView):
+    def post(self, request, *args, **kwargs):
+        # Check if an all-users chat already exists
+        existing_chat = GroupChat.objects.filter(name='All Users').first()
+        if existing_chat:
+            return Response(
+                {"error": "All Users group chat already exists", "chat_id": existing_chat.id},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Create new group chat
+        chat = GroupChat.objects.create(name='All Users')
+        
+        # Add all users to the chat
+        all_users = User.objects.all()
+        chat.members.add(*all_users)
+        
+        return Response({
+            "message": "All Users group chat created successfully",
+            "chat": GroupChatSerializer(chat).data
+        }, status=status.HTTP_201_CREATED)

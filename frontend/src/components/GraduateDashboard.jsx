@@ -61,8 +61,9 @@ function GraduateDashboard({ user, onLogout }) {
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    minHeight: '60vh',
+                    minHeight: 'auto',
                     width: '100%',
+                    pt: 4,
                 }}
             >
                 <Typography variant="body1" color="text.secondary" sx={{ mt: 2 }}>
@@ -73,14 +74,15 @@ function GraduateDashboard({ user, onLogout }) {
     }
 
     return (
-        <Container maxWidth={false} sx={{ py: { xs: 2, sm: 4 }, px: { xs: 2, sm: 4 } }}>
+        <Container maxWidth={false} sx={{ pt: 4, px: { xs: 2, sm: 4 }, minHeight: '100vh' }}>
             <Paper 
                 elevation={0} 
                 sx={{ 
                     p: { xs: 2, sm: 3 }, 
                     mb: { xs: 3, sm: 4 }, 
                     borderRadius: 2,
-                    background: 'linear-gradient(135deg, #f5f7ff 0%, #f0f4ff 100%)'
+                    background: 'linear-gradient(135deg, #f5f7ff 0%, #f0f4ff 100%)',
+                    mt: 0
                 }}
             >
                 <Box sx={{ 

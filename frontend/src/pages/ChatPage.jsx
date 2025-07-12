@@ -16,7 +16,9 @@ import {
 import {
   Send as SendIcon,
   ArrowBack as ArrowBackIcon,
-  Search as SearchIcon
+  Search as SearchIcon,
+  Chat as ChatIcon,
+  Group as GroupIcon
 } from '@mui/icons-material';
 import ChatList from '../components/ChatList';
 
@@ -82,7 +84,11 @@ function ChatPage({ user }) {
     if (!newMessage.trim() || !chatId) return;
     
     try {
-      const { data } = await postChatMessage(chatId, newMessage);
+      const messageData = {
+        content: newMessage,
+        author: user.id  // Include the author's ID in the message data
+      };
+      const { data } = await postChatMessage(chatId, messageData);
       setMessages([...messages, data]);
       setNewMessage('');
     } catch (error) {
@@ -108,17 +114,34 @@ function ChatPage({ user }) {
   }
 
   return (
-    <Box sx={{ height: 'calc(100vh - 64px)', overflow: 'hidden' }}>
-      <Grid container sx={{ height: '100%' }}>
+    <Box sx={{ 
+      height: 'calc(100vh - 64px)',
+      width: '100vw',
+      overflowX: 'hidden',
+      position: 'relative'
+    }}>
+      <Grid container sx={{ 
+        height: '100%',
+        width: '100%',
+        margin: 0,
+        maxWidth: '100vw'
+      }}>
         {/* Chat List */}
         <Grid 
           item 
           xs={12} 
-          md={4} 
+          md={3} 
           sx={{
             display: { xs: showChatList ? 'block' : 'none', md: 'block' },
             height: '100%',
-            borderRight: '1px solid rgba(0, 0, 0, 0.12)'
+            borderRight: '1px solid rgba(0, 0, 0, 0.12)',
+            width: '280px',
+            minWidth: '240px',
+            maxWidth: '280px',
+            overflow: 'hidden',
+            flexShrink: 0,
+            position: 'relative',
+            zIndex: 1
           }}
         >
           <ChatList 
@@ -132,12 +155,16 @@ function ChatPage({ user }) {
         <Grid 
           item 
           xs={12} 
-          md={8} 
+          md 
           sx={{
             display: { xs: !showChatList ? 'flex' : 'none', md: 'flex' },
             flexDirection: 'column',
             height: '100%',
-            position: 'relative'
+            position: 'relative',
+            flex: 1,
+            minWidth: 0,
+            width: 'calc(100% - 280px)',
+            maxWidth: 'calc(100vw - 280px)'
           }}
         >
           {chatId ? (
@@ -188,23 +215,46 @@ function ChatPage({ user }) {
                   backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'100\' height=\'100\' viewBox=\'0 0 100 100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29-22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z\' fill=\'%239C92AC\' fill-opacity=\'0.1\' fill-rule=\'evenodd\'/%3E%3C/svg%3E")',
                 }}
               >
-                {messages.map((message) => (
+                {messages.map((message) => {
+                console.log('Message:', message);
+                console.log('Current User ID:', user?.id);
+                return (
                   <Box
                     key={message.id}
                     sx={{
                       display: 'flex',
-                      justifyContent: message.sender === user.id ? 'flex-end' : 'flex-start',
+                      flexDirection: 'column',
+                      alignItems: message.author === user.id ? 'flex-end' : 'flex-start',
                       mb: 2,
+                      width: '100%',
+                      px: 2,
                     }}
                   >
+                    {message.author !== user.id && (
+                      <Typography 
+                        variant="caption" 
+                        sx={{
+                          ml: 2,
+                          mb: 0.5,
+                          color: 'text.secondary',
+                          fontWeight: 'medium',
+                        }}
+                      >
+                        {message.author_name || 'Unknown User'}
+                      </Typography>
+                    )}
                     <Box
                       sx={{
                         maxWidth: '70%',
                         p: 1.5,
                         borderRadius: 2,
-                        bgcolor: message.sender === user.id ? 'primary.light' : 'background.paper',
-                        color: message.sender === user.id ? 'primary.contrastText' : 'text.primary',
+                        bgcolor: message.author === user.id ? 'primary.main' : 'background.paper',
+                        color: message.author === user.id ? 'common.white' : 'text.primary',
                         boxShadow: 1,
+                        borderTopRightRadius: message.author === user.id ? 2 : 8,
+                        borderTopLeftRadius: message.author !== user.id ? 2 : 8,
+                        ml: message.author !== user.id ? 0 : 'auto',
+                        mr: message.author === user.id ? 0 : 'auto',
                       }}
                     >
                       <Typography variant="body2">
@@ -217,14 +267,15 @@ function ChatPage({ user }) {
                           textAlign: 'right',
                           mt: 0.5,
                           opacity: 0.7,
-                          color: message.sender === user.id ? 'primary.contrastText' : 'text.secondary',
+color: message.author === user.id ? 'rgba(255, 255, 255, 0.7)' : 'text.secondary',
                         }}
                       >
                         {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </Typography>
                     </Box>
                   </Box>
-                ))}
+                );
+              })}
               </Box>
 
               {/* Message Input */}
