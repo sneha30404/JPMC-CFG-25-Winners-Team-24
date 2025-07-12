@@ -43,5 +43,6 @@ export const getChatMessages = (chatId) => api.get(`/chats/${chatId}/messages/`)
 export const createCommunityPost = (content) => api.post('/community-posts/', { content });
 export const updateCourseProgress = (course_id, completed) => api.post('/course-progress/', { course_id, completed });
 export const postChatMessage = (chatId, content) => api.post(`/chats/${chatId}/messages/`, { content });
+export const promoteUser = (userId) => api.post(`/users/${userId}/promote/`);
 
 export default api;

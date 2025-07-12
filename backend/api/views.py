@@ -94,6 +94,28 @@ class RegisterView(views.APIView):
             }
         )
 
+class PromoteUserView(views.APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, user_id, *args, **kwargs):
+        try:
+            user = User.objects.get(id=user_id)
+            if user.role == 'trainee':
+                user.role = 'graduate'
+                user.save()
+                return Response({
+                    'message': 'User successfully promoted to Graduate',
+                    'user': UserSerializer(user).data
+                }, status=status.HTTP_200_OK)
+            else:
+                return Response({
+                    'error': 'User is not a trainee'
+                }, status=status.HTTP_400_BAD_REQUEST)
+        except User.DoesNotExist:
+            return Response({
+                'error': 'User not found'
+            }, status=status.HTTP_404_NOT_FOUND)
+
 class DashboardView(views.APIView):
     permission_classes = [IsAuthenticated]
 
