@@ -1,6 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getDashboardData, getUserChats, updateCourseProgress } from '../api/api';
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CircularProgress,
+  Container,
+  Divider,
+  Grid,
+  LinearProgress,
+  Paper,
+  Typography,
+  Checkbox,
+  FormControlLabel,
+  Avatar,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  IconButton
+} from '@mui/material';
+import {
+  ExitToApp as LogoutIcon,
+  School as CourseIcon,
+  Forum as ChatIcon,
+  CheckCircle as CheckCircleIcon,
+  RadioButtonUnchecked as RadioButtonUncheckedIcon,
+  Message as MessageIcon
+} from '@mui/icons-material';
 import '../styles/dashboard.css';
 
 function TraineeDashboard({ user, onLogout }) {
@@ -53,125 +82,473 @@ function TraineeDashboard({ user, onLogout }) {
 
     if (isLoading) {
         return (
-            <div className="dashboard-container flex items-center justify-center">
-                <div className="text-center">
-                    <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-muted">Loading your dashboard...</p>
-                </div>
-            </div>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    minHeight: '60vh',
+                    width: '100%',
+                }}
+            >
+                <CircularProgress size={60} thickness={4} />
+                <Typography variant="body1" color="text.secondary" sx={{ mt: 2 }}>
+                    Loading your dashboard...
+                </Typography>
+            </Box>
         );
     }
 
     return (
-        <div className="dashboard-container">
-            <div className="dashboard-header">
-                <div>
-                    <h1>Hello, {user.first_name}!</h1>
-                    <p className="text-muted">Your Learning Journey</p>
-                </div>
-                <button className="btn btn-danger" onClick={onLogout}>Logout</button>
-            </div>
+        <Container maxWidth="lg" sx={{ py: { xs: 2, sm: 4 }, px: { xs: 1, sm: 2 } }}>
+            <Paper 
+                elevation={0} 
+                sx={{ 
+                    p: { xs: 2, sm: 3 }, 
+                    mb: { xs: 3, sm: 4 }, 
+                    borderRadius: 2,
+                    background: 'linear-gradient(135deg, #f5f7ff 0%, #f0f4ff 100%)'
+                }}
+            >
+                <Box sx={{ 
+                    display: 'flex', 
+                    flexDirection: { xs: 'column', sm: 'row' },
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 2
+                }}>
+                    <Box sx={{ textAlign: { xs: 'center', sm: 'left' } }}>
+                        <Typography 
+                            variant="h4" 
+                            component="h1" 
+                            sx={{ 
+                                fontWeight: 700,
+                                background: 'linear-gradient(45deg, #1976d2 30%, #21CBF3 90%)',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                                mb: 1
+                            }}
+                        >
+                            Hello, {user.first_name}!
+                        </Typography>
+                        <Typography 
+                            variant="subtitle1" 
+                            color="text.secondary" 
+                            sx={{ 
+                                fontSize: { xs: '1rem', sm: '1.1rem' },
+                                mb: { xs: 2, sm: 0 }
+                            }}
+                        >
+                            Welcome back to your learning journey
+                        </Typography>
+                    </Box>
+                    <Button
+                        variant="outlined"
+                        color="error"
+                        startIcon={<LogoutIcon />}
+                        onClick={onLogout}
+                        size="large"
+                        sx={{
+                            borderRadius: 2,
+                            px: 3,
+                            py: 1,
+                            textTransform: 'none',
+                            fontWeight: 600,
+                            borderWidth: 2,
+                            '&:hover': {
+                                borderWidth: 2
+                            }
+                        }}
+                    >
+                        Sign Out
+                    </Button>
+                </Box>
+            </Paper>
 
             {/* Progress Summary */}
-            <div className="card mb-6">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-                    <div>
-                        <h3>My Learning Progress</h3>
-                        <p className="text-muted">Track your courses and achievements</p>
-                    </div>
-                    <Link to="/community" className="btn btn-primary mt-2 md:mt-0">Ask the Community</Link>
-                </div>
-                
-                <div className="mb-6">
-                    <div className="flex justify-between mb-1">
-                        <span className="font-medium">Overall Progress</span>
-                        <span className="font-medium">{calculateOverallProgress()}%</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2.5">
-                        <div 
-                            className="bg-blue-600 h-2.5 rounded-full transition-all duration-500" 
-                            style={{ width: `${calculateOverallProgress()}%` }}
-                        ></div>
-                    </div>
-                </div>
-
-                <div className="space-y-4">
-                    {courses.length > 0 ? (
-                        courses.map(course => (
-                            <div 
-                                key={course.id} 
-                                className={`p-4 border rounded-lg transition-all duration-200 ${
-                                    progress[course.id] ? 'border-green-200 bg-green-50' : 'border-gray-200 hover:border-blue-200 hover:bg-blue-50'
-                                }`}
+            <Card 
+                sx={{ 
+                    mb: 4, 
+                    borderRadius: 3,
+                    boxShadow: '0 10px 30px rgba(25, 118, 210, 0.08)',
+                    '&:hover': {
+                        boxShadow: '0 15px 35px rgba(25, 118, 210, 0.12)'
+                    },
+                    transition: 'all 0.3s ease-in-out'
+                }}
+            >
+                <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+                    <Grid container spacing={3} alignItems="center">
+                        <Grid item xs={12} md={6}>
+                            <Typography 
+                                variant="h5" 
+                                component="h2" 
+                                sx={{ 
+                                    fontWeight: 600,
+                                    mb: 1,
+                                    color: 'primary.main'
+                                }}
                             >
-                                <div className="flex items-start">
-                                    <div className="flex items-center h-5">
-                                        <input
-                                            id={`course-${course.id}`}
-                                            type="checkbox"
-                                            checked={!!progress[course.id]}
-                                            onChange={(e) => handleProgressChange(course.id, e.target.checked)}
-                                            className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
-                                        />
-                                    </div>
-                                    <div className="ml-3 flex-1">
-                                        <label 
-                                            htmlFor={`course-${course.id}`}
-                                            className="block text-sm font-medium text-gray-700 cursor-pointer"
-                                        >
-                                            {course.title}
-                                        </label>
-                                        <p className="text-sm text-gray-500 mt-1">
-                                            {course.description || 'No description available'}
-                                        </p>
-                                    </div>
-                                    {progress[course.id] && (
-                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                            Completed
-                                        </span>
-                                    )}
-                                </div>
-                            </div>
-                        ))
-                    ) : (
-                        <div className="text-center py-8 text-muted">
-                            <p>No courses assigned yet. Check back later or contact support.</p>
-                        </div>
-                    )}
-                </div>
-            </div>
+                                My Learning Progress
+                            </Typography>
+                            <Typography 
+                                variant="body1" 
+                                color="text.secondary"
+                                sx={{ 
+                                    fontSize: '0.95rem',
+                                    opacity: 0.9
+                                }}
+                            >
+                                Track your courses and achievements
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Box sx={{ 
+                                display: 'flex', 
+                                gap: 2, 
+                                flexDirection: { xs: 'column', sm: 'row' },
+                                justifyContent: { xs: 'stretch', md: 'flex-end' },
+                                '& .MuiButton-root': {
+                                    borderRadius: 2,
+                                    px: 3,
+                                    py: 1.5,
+                                    textTransform: 'none',
+                                    fontWeight: 500,
+                                    fontSize: '0.95rem',
+                                    boxShadow: '0 2px 10px rgba(25, 118, 210, 0.1)',
+                                    '&:hover': {
+                                        boxShadow: '0 4px 15px rgba(25, 118, 210, 0.2)'
+                                    },
+                                    transition: 'all 0.2s ease-in-out'
+                                }
+                            }}>
+                                <Button
+                                    component={Link}
+                                    to="/community"
+                                    variant="contained"
+                                    color="primary"
+                                    startIcon={<ChatIcon />}
+                                    fullWidth={window.innerWidth < 600}
+                                    sx={{
+                                        background: 'linear-gradient(45deg, #1976d2 0%, #21CBF3 100%)',
+                                        '&:hover': {
+                                            background: 'linear-gradient(45deg, #1565c0 0%, #00B0FF 100%)',
+                                        },
+                                    }}
+                                >
+                                    Ask the Community
+                                </Button>
+                                <Button
+                                    component={Link}
+                                    to="/chat"
+                                    variant="outlined"
+                                    color="primary"
+                                    startIcon={<MessageIcon />}
+                                    fullWidth={window.innerWidth < 600}
+                                    sx={{
+                                        borderWidth: 1.5,
+                                        '&:hover': {
+                                            borderWidth: 1.5,
+                                            bgcolor: 'rgba(25, 118, 210, 0.04)'
+                                        },
+                                    }}
+                                >
+                                    Messages
+                                </Button>
+                            </Box>
+                        </Grid>
+                    </Grid>
 
-            {/* Group Chats */}
-            <div className="card">
-                <div className="flex justify-between items-center mb-4">
-                    <h3>My Group Chats</h3>
-                    <button className="btn btn-primary">
-                        New Chat
-                    </button>
-                </div>
-                
-                {chats.length > 0 ? (
-                    <ul className="list-group">
-                        {chats.map(chat => (
-                            <li key={chat.id} className="list-item">
-                                <Link to={`/chat/${chat.id}`} className="flex items-center justify-between">
-                                    <div>
-                                        <h4 className="font-medium">{chat.name}</h4>
-                                        <p className="text-sm text-muted">Last message: {new Date().toLocaleDateString()}</p>
-                                    </div>
-                                    <span className="text-muted text-sm">Open →</span>
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <div className="text-center py-8 text-muted">
-                        <p>You're not part of any group chats yet.</p>
-                        <button className="mt-3 btn btn-primary">Join a Chat</button>
-                    </div>
-                )}
-            </div>
-        </div>
+                    <Box sx={{ 
+                        mt: 4,
+                        p: { xs: 2, sm: 3 },
+                        bgcolor: 'rgba(25, 118, 210, 0.03)',
+                        borderRadius: 2,
+                        border: '1px solid rgba(25, 118, 210, 0.1)'
+                    }}>
+                        <Box sx={{ 
+                            display: 'flex', 
+                            justifyContent: 'space-between', 
+                            alignItems: 'center',
+                            mb: 1.5 
+                        }}>
+                            <Typography variant="subtitle2" color="text.primary" sx={{ fontWeight: 500 }}>
+                                Overall Progress
+                            </Typography>
+                            <Typography 
+                                variant="subtitle1" 
+                                sx={{ 
+                                    fontWeight: 600,
+                                    color: 'primary.main',
+                                    minWidth: 45,
+                                    textAlign: 'right'
+                                }}
+                            >
+                                {calculateOverallProgress()}%
+                            </Typography>
+                        </Box>
+                        <LinearProgress
+                            variant="determinate"
+                            value={calculateOverallProgress()}
+                            sx={{ 
+                                height: 10, 
+                                borderRadius: 5,
+                                backgroundColor: 'rgba(25, 118, 210, 0.1)',
+                                '& .MuiLinearProgress-bar': {
+                                    background: 'linear-gradient(90deg, #1976d2 0%, #21CBF3 100%)',
+                                    borderRadius: 5
+                                }
+                            }}
+                        />
+                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1, fontSize: '0.75rem' }}>
+                            {courses.length} {courses.length === 1 ? 'course' : 'courses'} in progress
+                        </Typography>
+                    </Box>
+
+                    <Box sx={{ mt: 5 }}>
+                        <Box sx={{ 
+                            display: 'flex', 
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            mb: 3
+                        }}>
+                            <Typography 
+                                variant="h5" 
+                                component="h2"
+                                sx={{ 
+                                    fontWeight: 600,
+                                    color: 'primary.main'
+                                }}
+                            >
+                                My Courses
+                            </Typography>
+                            <Typography 
+                                variant="body2" 
+                                color="text.secondary"
+                                sx={{ 
+                                    display: { xs: 'none', sm: 'block' },
+                                    fontSize: '0.9rem'
+                                }}
+                            >
+                                {courses.length} {courses.length === 1 ? 'course' : 'courses'} in total
+                            </Typography>
+                        </Box>
+                        
+                        <List sx={{ '& .MuiListItem-root': { px: 0 } }}>
+                            {courses.map((course) => (
+                                <Card 
+                                    key={course.id}
+                                    variant="outlined"
+                                    sx={{
+                                        mb: 2,
+                                        borderRadius: 2,
+                                        borderColor: 'rgba(0, 0, 0, 0.08)',
+                                        transition: 'all 0.2s ease-in-out',
+                                        '&:hover': {
+                                            borderColor: 'primary.light',
+                                            boxShadow: '0 4px 20px rgba(25, 118, 210, 0.08)'
+                                        },
+                                        ...(progress[course.id] && {
+                                            borderLeft: '3px solid',
+                                            borderLeftColor: 'success.main',
+                                            backgroundColor: 'rgba(76, 175, 80, 0.03)'
+                                        })
+                                    }}
+                                >
+                                    <ListItem
+                                        component="div"
+                                        sx={{
+                                            py: 2,
+                                            px: { xs: 2, sm: 3 },
+                                            '& .MuiListItemSecondaryAction-root': {
+                                                right: { xs: 16, sm: 24 }
+                                            }
+                                        }}
+                                        secondaryAction={
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={!!progress[course.id]}
+                                                        onChange={(e) => handleProgressChange(course.id, e.target.checked)}
+                                                        icon={<RadioButtonUncheckedIcon />}
+                                                        checkedIcon={
+                                                            <CheckCircleIcon 
+                                                                color="primary" 
+                                                                sx={{ 
+                                                                    width: 24, 
+                                                                    height: 24,
+                                                                    '&.Mui-checked': {
+                                                                        color: 'success.main'
+                                                                    }
+                                                                }}
+                                                            />
+                                                        }
+                                                        sx={{
+                                                            '&:hover': { bgcolor: 'transparent' },
+                                                            '&.Mui-checked': {
+                                                                color: 'success.main'
+                                                            }
+                                                        }}
+                                                    />
+                                                }
+                                                label={
+                                                    <Typography 
+                                                        variant="body2" 
+                                                        color={progress[course.id] ? 'success.main' : 'text.secondary'}
+                                                        sx={{
+                                                            display: { xs: 'none', sm: 'block' },
+                                                            fontWeight: progress[course.id] ? 600 : 400,
+                                                            fontSize: '0.85rem'
+                                                        }}
+                                                    >
+                                                        {progress[course.id] ? 'Completed' : 'Mark as complete'}
+                                                    </Typography>
+                                                }
+                                                labelPlacement="start"
+                                                sx={{ m: 0 }}
+                                            />
+                                        }
+                                    >
+                                        <ListItemAvatar>
+                                            <Avatar 
+                                                sx={{ 
+                                                    bgcolor: progress[course.id] ? 'success.light' : 'primary.light',
+                                                    color: progress[course.id] ? 'success.contrastText' : 'primary.contrastText',
+                                                    width: 44,
+                                                    height: 44,
+                                                    mr: 2
+                                                }}
+                                            >
+                                                <CourseIcon />
+                                            </Avatar>
+                                        </ListItemAvatar>
+                                        <ListItemText
+                                            primary={
+                                                <Typography 
+                                                    variant="subtitle1" 
+                                                    sx={{ 
+                                                        fontWeight: 600,
+                                                        color: progress[course.id] ? 'success.dark' : 'text.primary',
+                                                        textDecoration: progress[course.id] ? 'line-through' : 'none',
+                                                        textDecorationColor: 'success.main',
+                                                        opacity: progress[course.id] ? 0.8 : 1
+                                                    }}
+                                                >
+                                                    {course.title}
+                                                </Typography>
+                                            }
+                                            secondary={
+                                                <Box sx={{ 
+                                                    display: 'flex', 
+                                                    alignItems: 'center',
+                                                    mt: 0.5
+                                                }}>
+                                                    <Box sx={{
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        bgcolor: progress[course.id] ? 'success.light' : 'action.selected',
+                                                        color: progress[course.id] ? 'success.dark' : 'text.secondary',
+                                                        px: 1.5,
+                                                        py: 0.5,
+                                                        borderRadius: 1,
+                                                        fontSize: '0.7rem',
+                                                        fontWeight: 600,
+                                                        letterSpacing: '0.5px'
+                                                    }}>
+                                                        {course.lessons_count} {course.lessons_count === 1 ? 'lesson' : 'lessons'}
+                                                    </Box>
+                                                    {progress[course.id] && (
+                                                        <Box 
+                                                            component="span"
+                                                            sx={{
+                                                                ml: 1.5,
+                                                                display: 'inline-flex',
+                                                                alignItems: 'center',
+                                                                color: 'success.main',
+                                                                fontSize: '0.75rem',
+                                                                fontWeight: 500
+                                                            }}
+                                                        >
+                                                            <CheckCircleIcon sx={{ fontSize: '1rem', mr: 0.5 }} />
+                                                            Completed
+                                                        </Box>
+                                                    )}
+                                                </Box>
+                                            }
+                                            sx={{ my: 0 }}
+                                        />
+                                    </ListItem>
+                                </Card>
+                            ))}
+                            
+                            {courses.length === 0 && (
+                                <Box sx={{ 
+                                    textAlign: 'center', 
+                                    py: 4,
+                                    px: 2
+                                }}>
+                                    <SchoolIcon sx={{ fontSize: 48, color: 'action.disabled', mb: 1.5 }} />
+                                    <Typography variant="body1" color="text.secondary" sx={{ mb: 1 }}>
+                                        No courses assigned yet
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary" sx={{ opacity: 0.8, mb: 2 }}>
+                                        Your assigned courses will appear here
+                                    </Typography>
+                                    <Button 
+                                        variant="outlined" 
+                                        color="primary"
+                                        size="small"
+                                        sx={{ mt: 1 }}
+                                    >
+                                        Browse Courses
+                                    </Button>
+                                </Box>
+                            )}
+                        </List>
+                    </Box>
+                </CardContent>
+            </Card>
+
+            {/* Recent Chats */}
+            {chats.length > 0 && (
+                <Card sx={{ borderRadius: 2 }}>
+                    <CardContent>
+                        <Typography variant="h6" gutterBottom>
+                            Recent Chats
+                        </Typography>
+                        <List>
+                            {chats.slice(0, 3).map((chat) => (
+                                <ListItem
+                                    key={chat.id}
+                                    button
+                                    component={Link}
+                                    to={`/chat/${chat.id}`}
+                                    divider
+                                >
+                                    <ListItemText
+                                        primary={chat.title}
+                                        secondary={`Last message: ${new Date(chat.last_message_at).toLocaleString()}`}
+                                    />
+                                </ListItem>
+                            ))}
+                        </List>
+                        {chats.length > 3 && (
+                            <Box sx={{ textAlign: 'center', mt: 2 }}>
+                                <Button
+                                    component={Link}
+                                    to="/chats"
+                                    color="primary"
+                                    variant="text"
+                                >
+                                    View All Chats
+                                </Button>
+                            </Box>
+                        )}
+                    </CardContent>
+                </Card>
+            )}
+        </Container>
     );
 }
 

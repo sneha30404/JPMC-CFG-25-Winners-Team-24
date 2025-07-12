@@ -7,6 +7,7 @@ import GraduateDashboard from './components/GraduateDashboard.jsx';
 import AdminDashboard from './components/AdminDashboard.jsx';
 import CommunityPage from './pages/CommunityPage.jsx';
 import GroupChatPage from './pages/GroupChatPage.jsx';
+import ChatPage from './pages/ChatPage.jsx';
 import TraineeRegister from './pages/register/TraineeRegister.jsx';
 import AdminRegister from './pages/register/AdminRegister.jsx';
 import './App.css';
@@ -67,7 +68,14 @@ function App() {
                     <Route path="/community" element={
                         user ? <CommunityPage user={user} /> : <Navigate to="/" />
                     } />
-                    <Route path="/chat/:chatId" element={
+                    <Route path="/chat" element={
+                        user ? <ChatPage user={user} /> : <Navigate to="/" />
+                    }>
+                        <Route path=":chatId" element={
+                            user ? <ChatPage user={user} /> : <Navigate to="/" />
+                        } />
+                    </Route>
+                    <Route path="/old-chat/:chatId" element={
                         user ? <GroupChatPage user={user} /> : <Navigate to="/" />
                     } />
                     

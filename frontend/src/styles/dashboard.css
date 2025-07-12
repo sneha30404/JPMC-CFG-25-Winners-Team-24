@@ -2,25 +2,48 @@
 .dashboard-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 2rem 1rem;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* Header */
 .dashboard-header {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
     margin-bottom: 2.5rem;
-    padding-bottom: 1rem;
+    padding: 1rem 0;
+    width: 100%;
+    text-align: center;
     border-bottom: 1px solid #e2e8f0;
 }
 
 .dashboard-header h1 {
-    margin: 0;
-    font-size: 1.75rem;
+    margin: 0 0 0.5rem 0;
+    font-size: 2rem;
     font-weight: 600;
     color: #1a202c;
+}
+
+.dashboard-header .user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.dashboard-content {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    box-sizing: border-box;
 }
 
 /* Buttons */

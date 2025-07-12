@@ -1,15 +1,23 @@
 /* frontend/src/App.css */
+html, body, #root, .App {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     background-color: #f4f7f6;
-    margin: 0;
     color: #333;
 }
 
 .container {
-    max-width: 1200px;
-    margin: 20px auto;
-    padding: 20px;
+    max-width: 100%;
+    margin: 20px 0;
+    padding: 20px 5%;
+    box-sizing: border-box;
 }
 
 /* Landing Page */
@@ -64,22 +72,36 @@ body {
 /* Landing Page */
 .landing-container {
     min-height: 100vh;
+    width: 100vw;
+    max-width: 100vw;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
     background: linear-gradient(to bottom, #f0f7ff 0%, #ffffff 100%);
 }
 
 .landing-header {
+    width: 100%;
+    max-width: 100%;
     background: white;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     padding: 15px 0;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
 }
 
 .header-content {
-    max-width: 1200px;
+    width: 90%;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-sizing: border-box;
 }
 
 .logo {
@@ -115,13 +137,16 @@ body {
 }
 
 .hero-section {
-    max-width: 1200px;
+    width: 90%;
+    max-width: 1400px;
     margin: 40px auto;
-    padding: 0 20px;
+    padding: 0;
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
     align-items: center;
     gap: 40px;
+    box-sizing: border-box;
 }
 
 .hero-content {
@@ -210,13 +235,18 @@ body {
 }
 
 .features-section {
+    width: 100%;
+    max-width: 100%;
     background: white;
-    padding: 60px 20px;
+    padding: 60px 5%;
+    box-sizing: border-box;
 }
 
 .features-container {
-    max-width: 1200px;
-    margin: 0 auto;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 .section-header {
