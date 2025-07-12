@@ -21,7 +21,15 @@ api.interceptors.request.use(
 );
 
 // --- AUTH ---
+export const checkPhoneNumber = (phone_number) => api.post('/phonecheck/', { phone_number });
+
 export const loginUser = (phone_number, otp) => api.post('/login/', { phone_number, otp });
+
+export const registerTrainee = (phone_number, name, interest) => 
+    api.post('/register/trainee/', { phone_number, name, interest });
+
+export const registerAdmin = (phone_number, name) => 
+    api.post('/register/admin/', { phone_number, name });
 
 // --- DATA FETCHING ---
 export const getDashboardData = () => api.get('/dashboard/');
