@@ -131,7 +131,7 @@ class DashboardView(views.APIView):
                 }
             )
         elif user.role == "trainee":
-            courses = Course.objects.filter(is_refresher=False)
+            courses = Course.objects.all()
             progress = UserCourseProgress.objects.filter(user=user)
             return Response(
                 {

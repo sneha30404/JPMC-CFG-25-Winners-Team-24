@@ -1,127 +1,337 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getDashboardData, getUserChats } from '../api/api';
-import '../styles/dashboard.css';
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Container,
+  Grid,
+  Typography,
+  Paper,
+  Divider,
+  List,
+  ListItem,
+  ListItemSecondaryAction,
+  IconButton,
+  useTheme,
+  useMediaQuery
+} from '@mui/material';
+import {
+  ExitToApp as LogoutIcon,
+  School as CourseIcon,
+  CheckCircle as CheckCircleIcon,
+  Share as ShareIcon,
+  ArrowForward as ArrowForwardIcon,
+  Message as MessageIcon
+} from '@mui/icons-material';
 
 function GraduateDashboard({ user, onLogout }) {
     const [refreshers, setRefreshers] = useState([]);
     const [chats, setChats] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     useEffect(() => {
-        getDashboardData().then(res => setRefreshers(res.data.refreshers));
-        getUserChats().then(res => setChats(res.data));
+        async function fetchData() {
+            setIsLoading(true);
+            try {
+                const [dashboardRes, chatsRes] = await Promise.all([
+                    getDashboardData(),
+                    getUserChats()
+                ]);
+                setRefreshers(dashboardRes.data.refreshers || []);
+                setChats(chatsRes.data || []);
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        fetchData();
     }, []);
 
+    if (isLoading) {
+        return (
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    minHeight: '60vh',
+                    width: '100%',
+                }}
+            >
+                <Typography variant="body1" color="text.secondary" sx={{ mt: 2 }}>
+                    Loading your dashboard...
+                </Typography>
+            </Box>
+        );
+    }
+
     return (
-        <div className="dashboard-container">
-            <div className="dashboard-header">
-                <div>
-                    <h1>Welcome back, {user.first_name}!</h1>
-                    <p className="text-muted">Graduate Entrepreneur Dashboard</p>
-                </div>
-                <button className="btn btn-danger" onClick={onLogout}>Logout</button>
-            </div>
+        <Container maxWidth={false} sx={{ py: { xs: 2, sm: 4 }, px: { xs: 2, sm: 4 } }}>
+            <Paper 
+                elevation={0} 
+                sx={{ 
+                    p: { xs: 2, sm: 3 }, 
+                    mb: { xs: 3, sm: 4 }, 
+                    borderRadius: 2,
+                    background: 'linear-gradient(135deg, #f5f7ff 0%, #f0f4ff 100%)'
+                }}
+            >
+                <Box sx={{ 
+                    display: 'flex', 
+                    flexDirection: { xs: 'column', sm: 'row' },
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 2
+                }}>
+                    <Box sx={{ textAlign: { xs: 'center', sm: 'left' } }}>
+                        <Typography 
+                            variant="h4" 
+                            component="h1" 
+                            sx={{ 
+                                fontWeight: 700,
+                                background: 'linear-gradient(45deg, #1976d2 30%, #21CBF3 90%)',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                                mb: 1
+                            }}
+                        >
+                            Welcome, {user.first_name}!
+                        </Typography>
+                        <Typography 
+                            variant="subtitle1" 
+                            color="text.secondary" 
+                            sx={{ 
+                                fontSize: { xs: '1rem', sm: '1.1rem' },
+                                mb: { xs: 2, sm: 0 }
+                            }}
+                        >
+                            Graduate Entrepreneur Dashboard
+                        </Typography>
+                    </Box>
+                    <Box display="flex" gap={2}>
+                        <Button
+                            component={Link}
+                            to="/chat"
+                            variant="outlined"
+                            color="primary"
+                            size="large"
+                            startIcon={<MessageIcon />}
+                            sx={{
+                                borderRadius: 2,
+                                px: 3,
+                                py: 1,
+                                textTransform: 'none',
+                                fontWeight: 600,
+                                borderWidth: 2,
+                                whiteSpace: 'nowrap',
+                                '&:hover': {
+                                    borderWidth: 2
+                                }
+                            }}
+                        >
+                            Messages
+                        </Button>
+                        <Button
+                            variant="outlined"
+                            color="error"
+                            startIcon={<LogoutIcon />}
+                            onClick={onLogout}
+                            size="large"
+                            sx={{
+                                borderRadius: 2,
+                                px: 3,
+                                py: 1,
+                                textTransform: 'none',
+                                fontWeight: 600,
+                                borderWidth: 2,
+                                '&:hover': {
+                                    borderWidth: 2
+                                }
+                            }}
+                        >
+                            Sign Out
+                        </Button>
+                    </Box>
+                </Box>
+            </Paper>
 
             {user.has_success_tag && (
-                <div className="card mb-6" style={{ borderLeft: '4px solid #10b981' }}>
-                    <div className="flex items-start">
-                        <div className="flex-shrink-0 pt-0.5">
-                            <svg className="h-6 w-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                            </svg>
-                        </div>
-                        <div className="ml-3">
-                            <h3 className="text-green-800 font-medium">Success Tag Achieved!</h3>
-                            <p className="text-green-700 text-sm mt-1">
-                                Congratulations on earning your Success Tag! Share your journey to inspire others.
-                            </p>
-                            <button className="mt-2 btn btn-primary">
-                                Share Your Story
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <Card 
+                    sx={{ 
+                        mb: 4,
+                        borderLeft: '4px solid #10b981',
+                        borderRadius: 2,
+                        boxShadow: '0 4px 20px rgba(16, 185, 129, 0.1)'
+                    }}
+                >
+                    <CardContent>
+                        <Box display="flex" alignItems="flex-start">
+                            <CheckCircleIcon 
+                                color="success" 
+                                sx={{ 
+                                    fontSize: 32, 
+                                    mr: 2,
+                                    mt: 0.5 
+                                }} 
+                            />
+                            <Box>
+                                <Typography 
+                                    variant="h6" 
+                                    color="success.dark"
+                                    fontWeight={600}
+                                    gutterBottom
+                                >
+                                    Success Tag Achieved!
+                                </Typography>
+                                <Typography 
+                                    variant="body2" 
+                                    color="success.dark"
+                                    sx={{ opacity: 0.9, mb: 2 }}
+                                >
+                                    Congratulations on earning your Success Tag! Share your journey to inspire others.
+                                </Typography>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    startIcon={<ShareIcon />}
+                                    size="small"
+                                    sx={{ textTransform: 'none', fontWeight: 600 }}
+                                >
+                                    Share Your Story
+                                </Button>
+                            </Box>
+                        </Box>
+                    </CardContent>
+                </Card>
             )}
-            
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                <div className="card">
-                    <div className="flex justify-between items-center mb-4">
-                        <h3>Skill Refreshers</h3>
-                        <Link to="/community" className="btn btn-primary">Help Community</Link>
-                    </div>
-                    
-                    {refreshers.length > 0 ? (
-                        <ul className="list-group">
-                            {refreshers.map(course => (
-                                <li key={course.id} className="list-item">
-                                    <div className="flex items-center justify-between">
-                                        <div>
-                                            <h4 className="font-medium">{course.title}</h4>
-                                            <p className="text-sm text-muted">{course.description || 'No description available'}</p>
-                                        </div>
-                                        <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                                            Start →
-                                        </button>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <div className="text-center py-6 text-muted">
-                            <p>No refresher courses available at the moment.</p>
-                        </div>
-                    )}
-                </div>
 
-                <div className="card">
-                    <div className="flex justify-between items-center mb-4">
-                        <h3>My Mentorship Groups</h3>
-                        <button className="btn btn-primary">
-                            New Group
-                        </button>
-                    </div>
-                    
-                    {chats.length > 0 ? (
-                        <ul className="list-group">
-                            {chats.map(chat => (
-                                <li key={chat.id} className="list-item">
-                                    <Link to={`/chat/${chat.id}`} className="flex items-center justify-between">
-                                        <div>
-                                            <h4 className="font-medium">{chat.name}</h4>
-                                            <p className="text-sm text-muted">Last active: {new Date().toLocaleDateString()}</p>
-                                        </div>
-                                        <span className="text-muted text-sm">View →</span>
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <div className="text-center py-6 text-muted">
-                            <p>You're not part of any mentorship groups yet.</p>
-                            <button className="mt-2 btn btn-primary">Join a Group</button>
-                        </div>
-                    )}
-                </div>
-            </div>
-
-            <div className="card">
-                <h3>Your Impact</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                    <div className="bg-blue-50 p-4 rounded-lg text-center">
-                        <div className="text-2xl font-bold text-blue-600">12</div>
-                        <div className="text-sm text-muted">Mentees Helped</div>
-                    </div>
-                    <div className="bg-green-50 p-4 rounded-lg text-center">
-                        <div className="text-2xl font-bold text-green-600">24</div>
-                        <div className="text-sm text-muted">Community Posts</div>
-                    </div>
-                    <div className="bg-purple-50 p-4 rounded-lg text-center">
-                        <div className="text-2xl font-bold text-purple-600">8.9</div>
-                        <div className="text-sm text-muted">Average Rating</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+            <Grid container spacing={0}>
+                <Grid item xs={12} sx={{ width: '100%' }}>
+                    <Card 
+                        sx={{ 
+                            height: '100%',
+                            borderRadius: 0,
+                            boxShadow: 'none',
+                            border: 'none',
+                            '&:hover': {
+                                boxShadow: 'none'
+                            },
+                            transition: 'none'
+                        }}
+                    >
+                        <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+                            <Box 
+                                display="flex" 
+                                justifyContent="space-between" 
+                                alignItems="center"
+                                mb={3}
+                                flexWrap="wrap"
+                                gap={2}
+                            >
+                                <Typography 
+                                    variant="h5" 
+                                    component="h2"
+                                    sx={{ 
+                                        fontWeight: 600,
+                                        color: 'primary.main',
+                                        flex: 1,
+                                        minWidth: 'fit-content'
+                                    }}
+                                >
+                                    Skill Refreshers
+                                </Typography>
+                                <Button 
+                                    component={Link}
+                                    to="/community"
+                                    variant="contained"
+                                    color="primary"
+                                    size={isMobile ? 'small' : 'medium'}
+                                    sx={{ 
+                                        textTransform: 'none', 
+                                        fontWeight: 600,
+                                        whiteSpace: 'nowrap'
+                                    }}
+                                >
+                                    Help Community
+                                </Button>
+                            </Box>
+                            
+                            {refreshers.length > 0 ? (
+                                <List disablePadding>
+                                    {refreshers.map((course, index) => (
+                                        <React.Fragment key={course.id}>
+                                            <ListItem 
+                                                button 
+                                                component={Link}
+                                                to={`/course/${course.id}`}
+                                                sx={{
+                                                    borderRadius: 1,
+                                                    mb: 1,
+                                                    '&:hover': {
+                                                        backgroundColor: 'action.hover'
+                                                    }
+                                                }}
+                                            >
+                                                <Box sx={{ flex: 1 }}>
+                                                    <Typography 
+                                                        variant="subtitle1" 
+                                                        fontWeight={500}
+                                                        color="text.primary"
+                                                    >
+                                                        {course.title}
+                                                    </Typography>
+                                                    <Typography 
+                                                        variant="body2" 
+                                                        color="text.secondary"
+                                                        sx={{
+                                                            display: '-webkit-box',
+                                                            WebkitLineClamp: 2,
+                                                            WebkitBoxOrient: 'vertical',
+                                                            overflow: 'hidden',
+                                                            textOverflow: 'ellipsis'
+                                                        }}
+                                                    >
+                                                        {course.description || 'No description available'}
+                                                    </Typography>
+                                                </Box>
+                                                <ListItemSecondaryAction>
+                                                    <IconButton 
+                                                        edge="end" 
+                                                        color="primary"
+                                                        component={Link}
+                                                        to={`/course/${course.id}`}
+                                                    >
+                                                        <ArrowForwardIcon />
+                                                    </IconButton>
+                                                </ListItemSecondaryAction>
+                                            </ListItem>
+                                            {index < refreshers.length - 1 && <Divider component="li" />}
+                                        </React.Fragment>
+                                    ))}
+                                </List>
+                            ) : (
+                                <Box 
+                                    textAlign="center" 
+                                    py={4}
+                                    color="text.secondary"
+                                >
+                                    <Typography variant="body1">
+                                        No refresher courses available at the moment.
+                                    </Typography>
+                                </Box>
+                            )}
+                        </CardContent>
+                    </Card>
+                </Grid>
+            </Grid>
+        </Container>
     );
 }
 
