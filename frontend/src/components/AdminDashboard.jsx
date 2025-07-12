@@ -170,16 +170,6 @@ function AdminDashboard({ user, onLogout }) {
                         <Typography variant="h5" component="h2" sx={{ fontWeight: 600, color: 'primary.main' }}>
                             Trainee Overview
                         </Typography>
-                        <Button 
-                            component={Link}
-                            to="/community"
-                            variant="outlined"
-                            size="small"
-                            startIcon={<ChatIcon />}
-                            sx={{ textTransform: 'none' }}
-                        >
-                            View Community Feed
-                        </Button>
                     </Box>
                     
                     <TableContainer component={Paper} elevation={0} sx={{ borderRadius: 2, border: '1px solid rgba(0, 0, 0, 0.08)' }}>
