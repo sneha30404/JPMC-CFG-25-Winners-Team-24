@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getDashboardData, getUserChats } from '../api/api';
+import { getDashboardData, getUserChats, promoteUser } from '../api/api';
 import {
   Box,
   Button,
@@ -25,7 +25,8 @@ import {
   ListItem,
   ListItemText,
   ListItemAvatar,
-  TextField
+  TextField,
+  Link as MuiLink
 } from '@mui/material';
 import {
   ExitToApp as LogoutIcon,
@@ -67,6 +68,31 @@ function AdminDashboard({ user, onLogout }) {
         // In a real app, this would open a modal for selecting trainees and graduates
         alert("Feature to create chat: Select a trainee and graduate from the lists and click a 'Create Chat' button. (This is a UI implementation task)");
     };
+
+    const handlePromote = async (userId) => {
+    try {
+      await promoteUser(userId);
+      alert('User has been successfully promoted to Graduate!');
+      // Refresh the dashboard data
+      const [dashboardRes] = await Promise.all([
+        getDashboardData(),
+        getUserChats()
+      ]);
+      setTrainees(dashboardRes.data.trainees || []);
+      setGraduates(dashboardRes.data.graduates || []);
+    } catch (error) {
+      console.error('Error promoting user:', error);
+      alert('Failed to promote user. Please try again.');
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+        <CircularProgress />
+      </Box>
+    );
+  }
 
     if (isLoading) {
         return (
@@ -194,6 +220,7 @@ function AdminDashboard({ user, onLogout }) {
                                     <TableCell sx={{ fontWeight: 600 }}>Phone</TableCell>
                                     <TableCell sx={{ fontWeight: 600 }}>Sector</TableCell>
                                     <TableCell sx={{ fontWeight: 600 }}>Progress</TableCell>
+                                    <TableCell sx={{ fontWeight: 600 }}>Actions</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -226,6 +253,27 @@ function AdminDashboard({ user, onLogout }) {
           </Typography>
         </Box>
       </TableCell>
+       <TableCell>
+                        <Button
+                          variant="outlined"
+                          color="primary"
+                          size="small"
+                          onClick={() => handleViewProfile(trainee.id)}
+                        >
+                          View Profile
+                        </Button>
+                        {trainee.progress === 100 && (
+                          <Button
+                            variant="contained"
+                            color="success"
+                            size="small"
+                            onClick={() => handlePromote(trainee.id)}
+                            sx={{ ml: 1 }}
+                          >
+                            Promote
+                          </Button>
+                        )}
+                      </TableCell>
     </TableRow>
   ))
 }
@@ -239,9 +287,11 @@ function AdminDashboard({ user, onLogout }) {
             {/* Graduate Overview */}
             <Card sx={{ mb: 4, borderRadius: 3, boxShadow: 3 }}>
                 <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+                     <Box sx={{ mb: 3 }}>
                     <Typography variant="h5" component="h2" sx={{ fontWeight: 600, color: 'primary.main', mb: 3 }}>
                         Graduate Overview
                     </Typography>
+                    </Box>
                     
                     <TableContainer component={Paper} elevation={0} sx={{ borderRadius: 2, border: '1px solid rgba(0, 0, 0, 0.08)' }}>
                         <Table>
@@ -254,7 +304,7 @@ function AdminDashboard({ user, onLogout }) {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {graduates.length > 0 ? (
+                                {/* {graduates.length > 0 ? (
                                     graduates.map(graduate => (
                                         <TableRow key={graduate.id} hover>
                                             <TableCell>{graduate.first_name} {graduate.last_name}</TableCell>
@@ -293,6 +343,135 @@ function AdminDashboard({ user, onLogout }) {
                 </CardContent>
             </Card>
         </Container>
+    );
+}
+
+export default AdminDashboard; */}
+{graduates.map(graduate => (
+                    <TableRow key={graduate.id} hover>
+                      <TableCell>{graduate.first_name} {graduate.last_name}</TableCell>
+                      <TableCell sx={{ color: 'text.secondary' }}>{graduate.phone_number || 'N/A'}</TableCell>
+                      <TableCell>{graduate.business_sector || 'N/A'}</TableCell>
+                      <TableCell>
+                        {graduate.has_success_tag ? (
+                          <Chip 
+                            label="Success Tag" 
+                            color="success" 
+                            size="small"
+                            sx={{ fontWeight: 500, px: 0.5 }}
+                          />
+                        ) : (
+                          <Chip 
+                            label="In Progress" 
+                            variant="outlined"
+                            size="small"
+                            sx={{ color: 'text.secondary', borderColor: 'text.disabled' }}
+                          />
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </CardContent>
+        </Card>
+
+        {/* Group Chats
+        <Card sx={{ borderRadius: 3, boxShadow: 3 }}>
+          <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+              <Typography variant="h5" component="h2" sx={{ fontWeight: 600, color: 'primary.main' }}>
+                Manage Group Chats
+              </Typography>
+              <Button 
+                variant="contained" 
+                color="primary" 
+                startIcon={<AddIcon />}
+                onClick={handleCreateChat}
+                sx={{ textTransform: 'none' }}
+              >
+                New Chat Group
+              </Button>
+            </Box>
+            
+            {chats.length > 0 ? (
+              <List sx={{ '& .MuiListItem-root': { px: 0 } }}>
+                {chats.map(chat => (
+                  <Card 
+                    key={chat.id} 
+                    variant="outlined" 
+                    sx={{ 
+                      mb: 2, 
+                      borderRadius: 2,
+                      borderColor: 'rgba(0, 0, 0, 0.08)',
+                      transition: 'all 0.2s ease-in-out',
+                      '&:hover': {
+                        borderColor: 'primary.light',
+                        boxShadow: '0 4px 20px rgba(25, 118, 210, 0.08)'
+                      }
+                    }}
+                    component={Link}
+                    to={`/chat/${chat.id}`}
+                  >
+                    <ListItem sx={{ py: 2, px: { xs: 2, sm: 3 } }}>
+                      <ListItemAvatar>
+                        <Avatar sx={{ bgcolor: 'primary.light', color: 'primary.contrastText' }}>
+                          <GroupIcon />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText 
+                        primary={
+                          <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
+                            {chat.name}
+                          </Typography>
+                        }
+                        secondary={
+                          <Typography variant="body2" color="text.secondary">
+                            {chat.member_count || 0} members • Last active: {new Date().toLocaleDateString()}
+                          </Typography>
+                        }
+                      />
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Typography variant="body2" color="primary" sx={{ fontWeight: 500, mr: 1 }}>
+                          View Chat
+                        </Typography>
+                        <Box sx={{ color: 'primary.main' }}>→</Box>
+                      </Box>
+                    </ListItem>
+                  </Card>
+                ))}
+              </List>
+            ) : (
+              <Box sx={{ 
+                textAlign: 'center', 
+                py: 6, 
+                px: 2,
+                bgcolor: 'rgba(0, 0, 0, 0.01)',
+                borderRadius: 2
+              }}>
+                <GroupIcon sx={{ fontSize: 48, color: 'action.disabled', mb: 2 }} />
+                <Typography variant="h6" color="text.secondary" gutterBottom>
+                  No group chats yet
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 3, maxWidth: 400, mx: 'auto' }}>
+                  Create your first group chat to start connecting trainees and graduates.
+                </Typography>
+                <Button 
+                  variant="contained" 
+                  color="primary" 
+                  startIcon={<AddIcon />}
+                  onClick={handleCreateChat}
+                  sx={{ textTransform: 'none' }}
+                >
+                  Create Chat Group
+                </Button>
+              </Box>
+            )}
+          </CardContent>
+        </Card>
+      </Container> */}
+      </Container>
     );
 }
 
