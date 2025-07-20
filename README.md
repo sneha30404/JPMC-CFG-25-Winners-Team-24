@@ -90,5 +90,6 @@ A scalable, multi-tenant web platform designed to connect:
    npm start      # in frontend
    ```
 
+[Demo Video](demovideo.mp4)
 
 
