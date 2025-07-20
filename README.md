@@ -1,6 +1,6 @@
 # ICECD Community Empowerment Platform
 
-**Solution By Team-24 (Winning Team for this Problem Statement)**
+**Solution By Team-24🏆 (Winning Team for this Problem Statement)**
 
 ## Overview
 
