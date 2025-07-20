@@ -1,5 +1,7 @@
 # ICECD Community Empowerment Platform
 
+## Solution By Team-24 (Winning Team for this Problem Statement)
+
 ## Overview
 
 This project was developed for JPMorgan Chase's **Code for Good 2025** hackathon in collaboration with **ICECD (Indian Centre for Entrepreneurship and Career Development)**.
@@ -90,6 +92,6 @@ A scalable, multi-tenant web platform designed to connect:
    npm start      # in frontend
    ```
 
-[Demo Video](demovideo.mp4)
+
 
 
