@@ -67,7 +67,7 @@ A scalable, multi-tenant web platform designed to connect:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/sneha30404/JPMC-Code-For-Good-25-Team-24.git
+   git clone https://github.com/sneha30404/JPMC-CFG-25-Winners-Team-24.git
    ```
 
 2. Navigate to the project directory:
