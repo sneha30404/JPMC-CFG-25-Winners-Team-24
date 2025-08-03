@@ -8,6 +8,7 @@ This project was developed for JPMorgan Chase's **Code for Good 2025** hackathon
 
 ICECD has empowered over 10 million entrepreneurs across 55 countries over the past 38+ years. However, the organization is currently limited by its reliance on scattered WhatsApp groups for post-training communication and tracking progress. Our platform aims to solve this by providing a unified digital space for global collaboration, continuous mentorship, and success tracking.
 
+*Please Check out the demo video uploaded!*
 ---
 
 ## Problem Statement
